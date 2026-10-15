@@ -275,9 +275,9 @@ function home() {
   const nQ = L.reduce((s, l) => s + (l.quiz?.length || 0), 0);
   const wrong = Object.keys(store.get("wrong", {})).length;
   $("#main").innerHTML = `
-    <div class="eyebrow">2026학년도 2학기 · 제주대학교 · 중간고사 대비</div>
+    <div class="eyebrow">2026학년도 2학기 · 제주대학교 · 중간고사 10/22(목) 수업시간 · 객관식 25문항 · 강의록 위주</div>
     <h1>인적자원개발론</h1>
-    <p class="lead">1~6주 강의자료와 수업 필기(판서 사진·슬라이드 손글씨)를 합쳐 정리한 노트입니다. 정리노트로 이해하고, 암기노트·플래시카드로 외우고, 문제은행으로 반복 점검하세요.</p>
+    <p class="lead">1~7주 강의자료와 수업 필기(판서 사진·슬라이드 손글씨)를 합쳐 정리한 노트입니다. 정리노트로 이해하고, 암기노트·플래시카드로 외우고, 문제은행으로 반복 점검하세요.</p>
     <div class="grid stats">
       <div class="card tint" style="background:var(--t-lav)"><div class="stat">${L.filter(l => /^\d+$/.test(l.no)).length}</div><div class="meta">주차</div></div>
       <div class="card tint" style="background:var(--t-sky)"><div class="stat">${nCards}</div><div class="meta">플래시카드</div></div>
