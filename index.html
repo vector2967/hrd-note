@@ -11,19 +11,19 @@
 :root{
   --bg:#f7f4ec; --paper:#fffdf7; --ink:#1f1d1a; --sub:#5f5a50; --line:#ddd5c4;
   --accent:#8a1c1c; --accent-soft:#f6e3df; --memo:#e98b7a; --memo-bg:#fdeeea;
-  --key:#1d4e89; --key-bg:#e8eff8; --th:#efe8d8;
+  --key:#1d4e89; --key-bg:#e8eff8; --th:#efe8d8; --ok:#1f6b41; --ok-bg:#e3f3e8;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#161513; --paper:#1f1d1a; --ink:#ece7dc; --sub:#a9a294; --line:#3a362f;
     --accent:#e07a6a; --accent-soft:#3a2420; --memo:#e98b7a; --memo-bg:#33231f;
-    --key:#8fb6e8; --key-bg:#1c2633; --th:#2a2722;
+    --key:#8fb6e8; --key-bg:#1c2633; --th:#2a2722; --ok:#7fd3a0; --ok-bg:#1a2e22;
   }
 }
 :root[data-theme="dark"]{
   --bg:#161513; --paper:#1f1d1a; --ink:#ece7dc; --sub:#a9a294; --line:#3a362f;
   --accent:#e07a6a; --accent-soft:#3a2420; --memo:#e98b7a; --memo-bg:#33231f;
-  --key:#8fb6e8; --key-bg:#1c2633; --th:#2a2722;
+  --key:#8fb6e8; --key-bg:#1c2633; --th:#2a2722; --ok:#7fd3a0; --ok-bg:#1a2e22;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:16px}
@@ -79,6 +79,30 @@ footer{margin-top:60px;padding-top:14px;border-top:1px solid var(--line);color:v
   h1{font-size:27px}
   h2{font-size:21px}
 }
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0}
+.bar select,.bar button,.q button,.q input,.fcnav button{font:inherit;font-size:14px;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:5px 10px;cursor:pointer}
+.bar button.on{background:var(--ink);color:var(--paper)}
+.score{margin-left:auto;font-weight:700;color:var(--accent)}
+.q{border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:10px 0;background:var(--bg)}
+.q .qh{font-weight:500;margin-bottom:8px}
+.q .qh small{color:var(--sub);font-weight:400;margin-right:6px}
+.q .opts{display:grid;gap:6px}
+.q .opts button{text-align:left;cursor:pointer}
+.q .opts button.ok{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.q .opts button.no{border-color:var(--accent);background:var(--accent-soft)}
+.q input{width:100%;cursor:text;margin-bottom:6px}
+.q .ex{display:none;margin-top:8px;font-size:14px;padding:8px 10px;border-left:3px solid var(--key);background:var(--key-bg)}
+.q.done .ex{display:block}
+.card{perspective:1000px;height:240px;margin:12px 0;cursor:pointer;user-select:none}
+.card .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.card.flip .in{transform:rotateY(180deg)}
+.card .f,.card .b{position:absolute;inset:0;backface-visibility:hidden;border:1.5px solid var(--ink);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;text-align:center;background:var(--paper);overflow:auto}
+.card .f{font-family:"Noto Serif KR",serif;font-size:21px;font-weight:700}
+.card .b{transform:rotateY(180deg);background:var(--bg);font-size:15.5px}
+.card small{position:absolute;top:8px;left:12px;font:12px "Noto Sans KR",sans-serif;color:var(--sub)}
+.fcnav{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.fcnav .known{border-color:var(--ok);color:var(--ok)}
+@media (prefers-reduced-motion:reduce){.card .in{transition:none}}
 @media print{nav.toc,#theme{display:none}.wrap{display:block}main{border:0;padding:0}h2{break-before:page}}
 </style>
 </head>
@@ -121,6 +145,8 @@ footer{margin-top:60px;padding-top:14px;border-top:1px solid var(--line);color:v
   <a href="#ax" class="p">부록</a>
   <a href="#ax-1">학자·연도 연표</a>
   <a href="#ax-2">시험 직전 셀프체크</a>
+  <a href="#qb" class="p">문제 은행</a>
+  <a href="#fc" class="p">암기카드</a>
 </nav>
 
 <main>
@@ -953,12 +979,40 @@ ISD 절차 = <b>ADDIE</b>: 분석(Analysis)·설계(Design)·개발(Development)
 <details><summary>ADDIE 모형의 장단점은?</summary>장점: 학습활동의 사전계획성, 학습효과 극대화 / 단점: 장기간 소요, 현장 변화 즉시 반영 어려움</details>
 <details><summary>직무순환·직무확대·직무충실화의 대상(집단/개인)은?</summary>직무순환 = 집단 대상 / 직무확대·직무충실화 = 개인 대상</details>
 
+<h2 id="qb">문제 은행</h2>
+<p class="src">객관식·OX·단답형. 객관식·OX는 누르면 바로 채점되고, 단답형은 답을 쓴 뒤 ‘정답 보기’로 스스로 확인하세요.</p>
+<div class="bar">
+  <select id="qbWeek" aria-label="주차"><option value="">전체 주차</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+  <select id="qbType" aria-label="유형"><option value="">전체 유형</option><option value="mc">객관식</option><option value="ox">OX</option><option value="sa">단답형</option></select>
+  <button type="button" id="qbRand">랜덤 20문제</button>
+  <button type="button" id="qbAll">전체 보기</button>
+  <span class="score" id="qbScore"></span>
+</div>
+<div id="qbList"></div>
+
+<h2 id="fc">암기카드</h2>
+<p class="src">카드를 누르거나 Space로 뒤집고, ←/→로 넘기세요. ‘외웠음’으로 표시한 카드는 이 브라우저에만 저장됩니다.</p>
+<div class="bar">
+  <select id="fcWeek" aria-label="주차"><option value="">전체 주차</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select>
+  <button type="button" id="fcShuf">섞기</button>
+  <button type="button" id="fcOnly">못 외운 것만</button>
+  <button type="button" id="fcReset">외움 초기화</button>
+  <span class="score" id="fcPos"></span>
+</div>
+<div class="card" id="fcCard" tabindex="0" role="button" aria-label="카드 뒤집기"><div class="in"><div class="f"></div><div class="b"></div></div></div>
+<div class="fcnav">
+  <button type="button" id="fcPrev">← 이전</button>
+  <button type="button" id="fcKnow" class="known">✔ 외웠음</button>
+  <button type="button" id="fcNext">다음 →</button>
+</div>
+
 <footer>
 인적자원개발론 1~6주 강의자료 및 수업 필기를 바탕으로 개인 학습용으로 요약한 노트입니다. 원 강의자료(PPT)는 포함하지 않았습니다. 내용은 교재·강의 원문과 대조해 확인하세요.
 </footer>
 </main>
 </div>
 <button id="theme" type="button" aria-label="테마 전환">◐ 테마</button>
+<script src="study.js"></script>
 <script>
 document.getElementById('theme').onclick=function(){
   var r=document.documentElement,d=r.dataset.theme;
