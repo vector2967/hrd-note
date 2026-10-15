@@ -454,11 +454,11 @@ function quiz() {
   const cnt = store.get("qcount", 20);
   $("#main").innerHTML = `
     <div class="eyebrow">문제은행</div><h1>반복 문제 풀이</h1>
-    <p class="lead">매번 문제 순서와 보기 순서가 섞입니다. 틀린 문제는 자동으로 오답노트에 쌓이고, 오답 모드에서 맞히면 빠집니다.</p>
+    <p class="lead">매번 문제 순서와 보기 순서가 섞입니다. <b>말장난</b> 유형은 원문에서 단어 하나만 슬쩍 바꾼 함정 문제입니다. 틀린 문제는 자동으로 오답노트에 쌓이고, 오답 모드에서 맞히면 빠집니다.</p>
     <div class="panel">${picker()}
       <div class="row" style="margin-top:12px">
         <div><label>문제 수</label><input type="number" id="cnt" min="5" max="${Math.max(5, all.length)}" value="${Math.min(cnt, all.length) || cnt}" style="width:90px"></div>
-        <div><label>유형</label><select id="typ"><option value="all">전체</option><option value="mc">객관식만</option><option value="ox">OX만</option></select></div>
+        <div><label>유형</label><select id="typ"><option value="all">전체</option><option value="mc">객관식만</option><option value="ox">OX만</option><option value="trick">말장난만 (극악)</option></select></div>
       </div>
       <div class="row" style="margin-top:14px">
         <button class="btn" id="go" ${all.length ? "" : "disabled"}>랜덤 시험 시작 (${all.length}문제 중)</button>
@@ -472,7 +472,7 @@ function quiz() {
   const start = (pool, mode) => {
     const typ = $("#typ").value;
     store.set("qtype", typ);
-    pool = pool.filter(q => typ === "all" || (q.type || "mc") === typ);
+    pool = pool.filter(q => typ === "all" || (typ === "trick" ? q.trick : (q.type || "mc") === typ));
     const n = Math.max(1, Math.min(+$("#cnt").value || 20, pool.length));
     store.set("qcount", +$("#cnt").value || 20);
     if (!pool.length) return alert("해당 조건의 문제가 없습니다.");
@@ -491,7 +491,7 @@ function qzPlay() {
   if (Z.i >= Z.list.length) return qzEnd();
   const q = Z.list[Z.i], answered = Z.picked !== null;
   $("#main").innerHTML = `
-    <div class="row"><span class="pill">${lno(q.lec)} ${esc(q.lec.title)}</span><span class="pill">${q.type === "ox" ? "OX" : "객관식"}</span>
+    <div class="row"><span class="pill">${lno(q.lec)} ${esc(q.lec.title)}</span><span class="pill">${q.type === "ox" ? "OX" : "객관식"}</span>${q.trick ? `<span class="pill" style="background:var(--t-rose);color:var(--err)">말장난</span>` : ""}
       <span style="flex:1"></span><span class="meta">${Z.i + 1} / ${Z.list.length} · 정답 ${Z.score}</span></div>
     <div class="progress" style="margin-top:10px"><i style="width:${Z.i / Z.list.length * 100}%"></i></div>
     <div class="q-box"><div class="q-text">${esc(q.q)}</div>
